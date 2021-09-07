@@ -5,7 +5,13 @@
 //  Created by Jérémy Touzy on 09/07/2021.
 //
 
-import Foundation
+import ArgumentParser
 
-print("Hello, World!")
+struct PackageBuddyCLI: ParsableCommand {
+  static var configuration = CommandConfiguration(
+    abstract: "Command line helper for SPM-based projects.",
+    subcommands: [GenerateProjectDescriptor.self]
+  )
+}
 
+PackageBuddyCLI.main()
