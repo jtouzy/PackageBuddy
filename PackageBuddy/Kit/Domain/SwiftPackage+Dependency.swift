@@ -14,6 +14,7 @@ extension SwiftPackage {
     }
     struct Remote: Codable {
       let name: String
+      let location: String
     }
     case local(Local)
     case remote(Remote)

@@ -18,7 +18,8 @@ extension PackageDependencyDescription {
     case .scm(let sourceControlRepository):
       return .remote(
         .init(
-          name: sourceControlRepository.location
+          name: sourceControlRepository.name ?? sourceControlRepository.identity.description,
+          location: sourceControlRepository.location
         )
       )
     }
@@ -36,22 +37,50 @@ extension ProductDescription {
   }
 }
 
-extension TargetDescription {
-  func toTarget(dependencies: [SwiftPackage.Dependency]) -> SwiftPackage.Target {
-    .init(
-      name: name,
-      dependencies: self.dependencies.compactMap { dependency in
-        switch dependency {
-        case .byName(let name, _):
-          return dependencies.first(where: { $0.name == name })
-        case .product(_, _, _):
-          // TODO: Handle product dependencies
-          return .none
-        case .target(_, _):
-          // TODO: Handle target dependencies
-          return .none
+extension Manifest {
+  func toTargets(
+    packageDependencies: [SwiftPackage.Dependency]
+  ) -> [SwiftPackage.Target] {
+    targets.map { target in
+      .init(
+        name: target.name,
+        dependencies: target.dependencies.compactMap { dependency in
+          switch dependency {
+          case .byName(let name, _):
+            guard
+              let dependency = packageDependencies.first(where: { $0.name == name }),
+              case .local(let local) = dependency
+            else {
+              guard targets.first(where: { $0.name == name }) != .none else {
+                return .none
+              }
+              return .module(
+                .init(name: name)
+              )
+            }
+            return .local(
+              .init(location: local.location)
+            )
+          case .product(let name, let package, _):
+            guard
+              let dependency = packageDependencies.first(where: { $0.name == package }),
+              case .remote(let remote) = dependency
+            else {
+              return .none
+            }
+            return .remote(
+              .init(
+                gitName: package ?? name,
+                targetName: name,
+                location: remote.location
+              )
+            )
+          case .target(_, _):
+            // TODO: Handle target dependencies
+            return .none
+          }
         }
-      }
-    )
+      )
+    }
   }
 }

@@ -9,9 +9,15 @@ import ArgumentParser
 
 struct PackageBuddyCLI: ParsableCommand {
   static var configuration = CommandConfiguration(
-    abstract: "Command line helper for SPM-based projects.",
-    subcommands: [GenerateProjectDescriptor.self]
+    abstract: "Your best command line buddy for SPM-based projects.",
+    subcommands: [
+      CheckImports.self,
+      GenerateProjectDescriptor.self,
+      ShowDependencyTree.self
+    ]
   )
 }
 
+Logger.main.welcome()
 PackageBuddyCLI.main()
+Logger.main.goodbye()
