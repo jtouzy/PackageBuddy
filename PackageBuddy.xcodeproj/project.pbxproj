@@ -417,8 +417,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-package-manager";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = revision;
+				revision = 23fbe913da329e9ac8444c2a68d39d0acb72ef7f;
 			};
 		};
 		DCC6F289275A0BAA00D526F1 /* XCRemoteSwiftPackageReference "PathKit" */ = {
@@ -434,7 +434,7 @@
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.4.3;
+				version = 1.0.1;
 			};
 		};
 		DCC6F297275A354100D526F1 /* XCRemoteSwiftPackageReference "Rainbow" */ = {

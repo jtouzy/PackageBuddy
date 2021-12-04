@@ -5,10 +5,12 @@
 //  Created by Jérémy Touzy on 09/07/2021.
 //
 
+import Basics
 import PackageModel
 import PackageLoading
 import PackageGraph
 import PathKit
+import TSCBasic
 import Workspace
 
 // ========================================================================
@@ -65,35 +67,24 @@ private func analyzeProjectPathLive(
   }
 }
 
-private let swiftCompiler: AbsolutePath = {
-  let string: String
-  #if os(macOS)
-  string = try! Process.checkNonZeroExit(args: "xcrun", "--sdk", "macosx", "-f", "swiftc").spm_chomp()
-  #else
-  string = try! Process.checkNonZeroExit(args: "which", "swiftc").spm_chomp()
-  #endif
-  return AbsolutePath(string)
-}()
-
 private func analyzePackage(at location: FileLocation) throws -> SwiftPackage {
   PackageAnalyzingKit.Live.logger.print("Analyzing package: \(location.name.bold)...")
   return try resolveFromManifest(at: location)
 }
 
+// github.com/apple/swift-package-manager/blob/main/Examples/package-info/Sources/package-info/main.swift
 private func resolveFromManifest(at location: FileLocation) throws -> SwiftPackage {
   let path = AbsolutePath(location.pathString)
-  let identityResolver = DefaultIdentityResolver()
-  let manifest = try tsc_await {
-    ManifestLoader.loadRootManifest(
+  let observability = ObservabilitySystem({ print("\($0): \($1)") })
+  let workspace = try Workspace(forRootPackage: path)
+  let manifest = try tsc_await { completion in
+    workspace.loadRootManifest(
       at: path,
-      swiftCompiler: swiftCompiler,
-      swiftCompilerFlags: [],
-      identityResolver: identityResolver,
-      on: .global(),
-      completion: $0
+      observabilityScope: observability.topScope,
+      completion: completion
     )
   }
-  let dependencies = manifest.dependencies.map(\.toDependency)
+  let dependencies = manifest.dependencies.compactMap(\.toDependency)
   let targets = manifest.toTargets(packageDependencies: dependencies)
   let products = manifest.products.map { $0.toProduct(targets: targets) }
   return .init(

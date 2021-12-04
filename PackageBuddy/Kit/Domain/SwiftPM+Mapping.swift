@@ -8,20 +8,33 @@
 import PackageModel
 import PathKit
 
-extension PackageDependencyDescription {
-  var toDependency: SwiftPackage.Dependency {
+extension PackageDependency {
+  var toDependency: SwiftPackage.Dependency? {
     switch self {
-    case .local(let local):
+    case .fileSystem(let fileSystem):
       return .local(
-        path: Path(local.path.pathString)
+        path: Path(fileSystem.path.pathString)
       )
-    case .scm(let sourceControlRepository):
+    case .sourceControl(let sourceControl):
       return .remote(
         .init(
-          name: sourceControlRepository.name ?? sourceControlRepository.identity.description,
-          location: sourceControlRepository.location
+          name: sourceControl.nameForTargetDependencyResolutionOnly ?? sourceControl.identity.description,
+          location: sourceControl.location.stringified
         )
       )
+    case .registry:
+      return .none
+    }
+  }
+}
+
+extension PackageDependency.SourceControl.Location {
+  var stringified: String {
+    switch self {
+    case .local(let path):
+      return path.pathString
+    case .remote(let url):
+      return url.absoluteString
     }
   }
 }
