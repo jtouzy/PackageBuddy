@@ -40,6 +40,8 @@ alias pkgbuddy="/Users/jeremytouzy/Clones/PackageBuddy/Builds/PackageBuddy"
 
 ## Available tools
 
+All examples in the tools documentation are based on the [ExampleApp](ExampleApp). This is a minimalist SwiftUI app with some SPM modules, just to show few examples for each available command. This example app will be more complete later.
+
 ### 🔧 Checking imports consistency
 
 Check all your `import` statements listed in your source code and checks if your SPM module list them as they should do.
@@ -50,10 +52,20 @@ It also check the opposite case, if you list too much dependencies in your Packa
 pkgbuddy check-imports -p <project_path>
 ```
 
+In the ExampleApp, all packages are fine:
+
 <p align="center">
   <img width="800"
-       alt="Screenshot 2021-12-04 at 21 37 17"
-       src="https://user-images.githubusercontent.com/5709133/144723905-65865976-2de8-4752-b0cf-f8b74953ca0c.png">
+       alt="Screenshot 2021-12-05 at 10 54 29"
+       src="https://user-images.githubusercontent.com/5709133/144742057-4c7dae2b-d95e-4a5a-9c4f-762ebcd5a7c5.png">
+</p>
+
+But if we add a random dependency to our ModuleB's `Package.swift` and don't use it in the code, we get different result:
+
+<p align="center">
+  <img width="800"
+       alt="Screenshot 2021-12-05 at 11 11 42"
+       src="https://user-images.githubusercontent.com/5709133/144742315-99aeba00-bb64-4319-ba59-09ea717f0f9e.png">
 </p>
 
 ### 🔧 Show dependency tree
@@ -65,8 +77,8 @@ pkgbuddy show-dependency-tree -p <project_path> -m <optional:module_name>
 
 <p align="center">
   <img width="800"
-       alt="Screenshot 2021-12-04 at 21 37 17"
-       src="https://user-images.githubusercontent.com/5709133/144723905-65865976-2de8-4752-b0cf-f8b74953ca0c.png">
+       alt="Screenshot 2021-12-05 at 10 56 43"
+       src="https://user-images.githubusercontent.com/5709133/144742076-de1297d4-8bfa-4b44-aef4-36316e4a362c.png">
 </p>
 
 ## Feedbacks
