@@ -1,6 +1,4 @@
-<img width="150"
-     alt="Capture d’écran 2021-12-03 à 17 26 30"
-     src="https://user-images.githubusercontent.com/5709133/144723803-97d8bfc1-7a5f-47ab-9085-5862e3be437b.png">
+![packagebuddy-02](https://user-images.githubusercontent.com/5709133/145047678-ffd043ac-5441-47cf-880d-ac4d70d9ff7c.png)
 
 # PackageBuddy: your best SPM buddy
 
