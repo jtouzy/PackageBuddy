@@ -74,7 +74,7 @@ extension Manifest {
             return .local(
               .init(location: local.location)
             )
-          case .product(let name, let package, _):
+          case .product(let name, let package, _, _):
             guard
               let dependency = packageDependencies.first(where: { $0.name == package }),
               case .remote(let remote) = dependency

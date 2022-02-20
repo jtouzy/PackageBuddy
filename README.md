@@ -27,12 +27,10 @@ That's why PackageBuddy has been created. It's here to provide this kind of tool
 
 ## Getting Started
 
-At this stage of development, PackageBuddy is not available with package management tools like `brew` (yes, it's a paradox). We're currently working on making it available more easily.
+You can install PackageBuddy (`pbuddy` CLI) using Homebrew.
 
-For now, to use it, clone the public project or download it, then create an alias to the distributed binary.
 ```bash
-# in .bash_profile
-alias pkgbuddy="<your_path_to_github_clone_executable>/PackageBuddy"
+brew install jtouzy/formulae/pbuddy
 ```
 
 ## Available tools
