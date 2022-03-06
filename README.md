@@ -4,7 +4,7 @@
 
 PackageBuddy is a command-line utility providing tools to help organize, modularize, and control Swift projects that use [Swift Package Manager](https://www.swift.org/package-manager/) modularization. It fills the lack of Xcode-integrated features.
 
-[![Latest version](https://img.shields.io/badge/Latest%20version-0.1.0-blue)](https://github.com/jtouzy/PackageBuddy)
+[![Latest version](https://img.shields.io/badge/Latest%20version-0.2.0-blue)](https://github.com/jtouzy/PackageBuddy)
 
 ## Summary
 
@@ -15,7 +15,7 @@ PackageBuddy is a command-line utility providing tools to help organize, modular
 
 ## Motivations
 
-Over the last few years, [Swift Package Manager](https://www.swift.org/package-manager/) has taken more and more space in Swift projects development. It has become mature  enough to be integrated in Xcode 11.
+Over the last few years, [Swift Package Manager](https://www.swift.org/package-manager/) has taken more and more space in Swift projects development. It has become mature enough to be integrated in Xcode 11.
 
 It's clearly a powerful tool to manage your external dependencies, but also to internally modularize your code. When your project starts to grow, it's a best practice to modularize your code to organize it: and splitting it into SPM modules can be a great solution.
 
@@ -44,7 +44,7 @@ Checks all your `import` statements listed in your source code and checks if you
 It also checks unused dependencies (listed in your `Package.swift`, but not imported in your source code).
 
 ```bash
-pkgbuddy check-imports -p <project_path>
+pbuddy check-imports -p <project_path>
 ```
 
 In the ExampleApp, all packages are fine:
@@ -63,12 +63,16 @@ But if we add a random dependency to our ModuleB's `Package.swift` and don't use
        src="https://user-images.githubusercontent.com/5709133/144742315-99aeba00-bb64-4319-ba59-09ea717f0f9e.png">
 </p>
 
-### 🔧 Show dependency tree
+### 🔧 Dependency tree
 
 Displays the dependency tree of your project's module or a custom module.
 ```bash
-pkgbuddy show-dependency-tree -p <project_path> -m <optional:module_name>
+pbuddy tree <type> -p <project_path> -m <optional:module_name>
 ```
+
+Two types of tree exists at this time:
+* `basic` is a simple tree displayed as text
+* `mermaid` generates a markdown/mermaid output, to display a visual tree of your packages
 
 <p align="center">
   <img width="800"

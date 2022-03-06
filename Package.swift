@@ -52,10 +52,6 @@ let package = Package(
           package: "swift-package-manager"
         )
       ]
-    ),
-    .testTarget(
-      name: "PackageBuddyTests",
-      dependencies: ["PackageBuddy"]
     )
   ]
 )

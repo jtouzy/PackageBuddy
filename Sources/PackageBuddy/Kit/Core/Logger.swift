@@ -2,7 +2,8 @@
 //  Logger.swift
 //  PackageBuddy
 //
-//  Created by Jérémy Touzy on 03/12/2021.
+//  Copyright © 2022 Jérémy TOUZY and the repository contributors.
+//  Licensed under the MIT License.
 //
 
 import Foundation

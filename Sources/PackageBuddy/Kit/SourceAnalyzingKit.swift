@@ -2,7 +2,8 @@
 //  SourceAnalyzingKit.swift
 //  PackageBuddy
 //
-//  Created by Jérémy Touzy on 07/09/2021.
+//  Copyright © 2022 Jérémy TOUZY and the repository contributors.
+//  Licensed under the MIT License.
 //
 
 import PathKit

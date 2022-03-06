@@ -2,14 +2,15 @@
 //  FileLocation.swift
 //  PackageBuddy
 //
-//  Created by Jérémy Touzy on 07/09/2021.
+//  Copyright © 2022 Jérémy TOUZY and the repository contributors.
+//  Licensed under the MIT License.
 //
 
 import PathKit
 
-struct FileLocation: Codable {
-  let name: String
-  let pathString: String
+public struct FileLocation: Codable {
+  public let name: String
+  public let pathString: String
 
   init(path: Path) {
     self.name = path.lastComponent

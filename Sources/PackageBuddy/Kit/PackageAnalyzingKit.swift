@@ -2,7 +2,8 @@
 //  PackageAnalyzingKit.swift
 //  PackageBuddy
 //
-//  Created by Jérémy Touzy on 09/07/2021.
+//  Copyright © 2022 Jérémy TOUZY and the repository contributors.
+//  Licensed under the MIT License.
 //
 
 import Basics
@@ -84,12 +85,5 @@ private func resolveFromManifest(at location: FileLocation) throws -> SwiftPacka
       completion: completion
     )
   }
-  let dependencies = manifest.dependencies.compactMap(\.toDependency)
-  let targets = manifest.toTargets(packageDependencies: dependencies)
-  let products = manifest.products.map { $0.toProduct(targets: targets) }
-  return .init(
-    location: location,
-    dependencies: dependencies,
-    products: products
-  )
+  return try SwiftPackage.build(from: manifest, location: location)
 }

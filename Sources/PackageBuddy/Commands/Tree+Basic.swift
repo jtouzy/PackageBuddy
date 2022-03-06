@@ -1,60 +1,57 @@
 //
-//  ShowDependencyTree.swift
-//  ShowDependencyTree
+//  Tree+Basic.swift
+//  PackageBuddy
 //
-//  Created by Jérémy Touzy on 10/09/2021.
+//  Copyright © 2022 Jérémy TOUZY and the repository contributors.
+//  Licensed under the MIT License.
 //
 
 import ArgumentParser
 import PathKit
-import Foundation
 
-struct ShowDependencyTree: ParsableCommand {
-  @Option(
-    name: [.customShort("p"), .customLong("project-path")]
-  )
-  var projectPathString: String
-  @Option(
-    name: [.customShort("m"), .customLong("module")]
-  )
-  var moduleName: String?
-  @Option(
-    name: [.customShort("d"), .customLong("depth")]
-  )
-  var depth: Int?
-}
+// ========================================================================
+// MARK: Command definition
+// ========================================================================
 
-extension ShowDependencyTree {
-  func run() throws {
-    let runner = Runner(
-      projectDescriptorKit: .live,
-      projectPath: Path(projectPathString),
-      moduleName: moduleName,
-      depth: depth
-    )
-    try runner.run()
+extension Tree {
+  struct Basic: ParsableCommand {
+    @OptionGroup var options: Options
   }
 }
 
 // ========================================================================
-// MARK: ShowDependencyTree: Runner
+// MARK: Runner declaration & invocation
 // ========================================================================
 
-private extension ShowDependencyTree {
+extension Tree.Basic {
   struct Runner {
     let projectDescriptorKit: ProjectDescriptorKit
     let projectPath: Path
     let moduleName: String?
     let depth: Int?
   }
+
+  func run() throws {
+    let runner = Runner(
+      projectDescriptorKit: .live,
+      projectPath: Path(options.projectPathString),
+      moduleName: options.moduleName,
+      depth: options.depth
+    )
+    try runner.run()
+  }
 }
 
-extension ShowDependencyTree.Runner {
-  fileprivate static let logger = Logger.make("ShowDependencyTree")
+// ========================================================================
+// MARK: Running command
+// ========================================================================
+
+extension Tree.Basic.Runner {
+  fileprivate static let logger = Logger.make("Tree[Basic]")
 
   func run() throws {
     let projectDescriptor = try projectDescriptorKit.evaluateProjectDescriptor(projectPath, false)
-    let destinationPackages: [SwiftPackage] = {
+    let packages: [SwiftPackage] = {
       if let moduleName = moduleName {
         if let destinationPackage = projectDescriptor.first(where: { $0.name == moduleName }) {
           return [destinationPackage]
@@ -63,7 +60,7 @@ extension ShowDependencyTree.Runner {
       }
       return projectDescriptor
     }()
-    destinationPackages.forEach { package in
+    packages.forEach { package in
       printPackageHeader(package)
       printPackageTree(
         package,
@@ -75,7 +72,7 @@ extension ShowDependencyTree.Runner {
 }
 
 private func printPackageHeader(_ package: SwiftPackage) {
-  ShowDependencyTree.Runner.logger.print("\("[\(package.name)]".yellow.bold) package: Dependency tree")
+  Tree.Basic.Runner.logger.print("\("[\(package.name)]".yellow.bold) package: Dependency tree")
 }
 private func printPackageTree(
   _ package: SwiftPackage,
@@ -91,11 +88,11 @@ private func printPackageTree(
     .targets
     .first(where: { $0.name == package.name })?
     .dependencies
-    .sorted(by: { $0.name < $1.name })
+    .sorted(by: { $0.displayName < $1.displayName })
     .forEach { dependency in
       let indent = Array(repeating: "  ", count: level).joined()
-      ShowDependencyTree.Runner.logger.print("\(indent)↳ \(dependency.name)")
-      if let dependencyPackage = packages.first(where: { $0.name == dependency.name }) {
+      Tree.Basic.Runner.logger.print("\(indent)↳ \(dependency.displayName)")
+      if let dependencyPackage = packages.findLocal(fromTargetDependency: dependency) {
         printPackageTree(
           dependencyPackage,
           in: packages,

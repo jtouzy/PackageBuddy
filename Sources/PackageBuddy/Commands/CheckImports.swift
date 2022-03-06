@@ -1,8 +1,9 @@
 //
 //  CheckImports.swift
-//  CheckImports
+//  PackageBuddy
 //
-//  Created by Jérémy Touzy on 07/09/2021.
+//  Copyright © 2022 Jérémy TOUZY and the repository contributors.
+//  Licensed under the MIT License.
 //
 
 import ArgumentParser
@@ -76,7 +77,7 @@ extension CheckImports.Runner {
       for product in package.products {
         for target in product.targets {
           // NOTE: For checking dependencies, we take only this target dependencies.
-          let toCheckTargetDependencyNames = target.dependencies.map { $0.name }
+          let toCheckTargetDependencyNames = target.dependencies.map { $0.displayName }
           let targetSourcePath = Path(package.location.pathString) + Path("Sources") + Path(target.name)
           let uniqueSourceImports = try sourceAnalyzingKit.findSourceImports(targetSourcePath)
           let sortedSourceImports: [String] = {
